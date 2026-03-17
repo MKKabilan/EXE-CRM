@@ -512,12 +512,12 @@ function handleDownload(btn) {
         btn.disabled = false;
 
         // ✅ REAL DOWNLOAD TRIGGER
-        const link = document.createElement("a");
-        link.href = "download/crm.exe"; // path to your file
-        link.download = "Professional_CRM_v2.5.exe";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+const link = document.createElement("a");
+link.href = "https://drive.google.com/uc?export=download&id=1-PaJUHPaPlgsoJQeYqVF-9UWiNsw1CKG";
+link.download = "Professional_CRM_v2.5.exe";
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
 
     }, 1500);
 }
