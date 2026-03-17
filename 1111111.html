@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional CRM v2.5 | Smart Business Management</title>
+    <meta name="description" content="Manage clients, track payments, and automate follow-ups with Professional CRM v2.5. Lightweight Windows application.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- UI Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Swiper.js for Screenshots -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#a855f7',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #6366f1;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Toast Notification Styling */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #10b981;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+        }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+
+<body class="bg-slate-50 dark:bg-darkBg text-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+    <!-- Toast Notification -->
+    <div id="toast">✅ Download started successfully!</div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 px-6 py-4" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl px-6 py-3 shadow-lg border border-white/20">
+            <div class="flex items-center gap-2">
+                <div class="bg-primary p-2 rounded-lg">
+                    <i class="fas fa-rocket text-white"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight">ProCRM <span class="text-primary text-sm font-medium">v2.5</span></span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8 font-medium">
+                <a href="#features" class="hover:text-primary transition">Features</a>
+                <a href="#screenshots" class="hover:text-primary transition">Tour</a>
+                <a href="#download" class="hover:text-primary transition">Download</a>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <button id="theme-toggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:ring-2 ring-primary transition">
+                    <i id="theme-icon" class="fas fa-moon"></i>
+                </button>
+                <a href="#download" class="bg-primary hover:bg-indigo-700 text-white px-5 py-2 rounded-xl transition shadow-lg shadow-primary/25 text-sm font-semibold">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-32 pb-20 overflow-hidden">
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10">
+            <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] bg-secondary/10 rounded-full blur-[120px]"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div data-aos="fade-up" class="inline-block px-4 py-1.5 mb-6 rounded-full bg-primary/10 text-primary text-sm font-bold border border-primary/20">
+                🚀 New Version 2.5 is Live
+            </div>
+            <h1 data-aos="fade-up" data-aos-delay="100" class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
+                Smart CRM for Your <br><span class="gradient-text">Business Growth</span>
+            </h1>
+            <p data-aos="fade-up" data-aos-delay="200" class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10">
+                Manage clients, track payments, and automate follow-ups in one secure, high-performance Windows application.
+            </p>
+            
+            <div data-aos="fade-up" data-aos-delay="300" class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button onclick="handleDownload(this)" class="group bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-8 py-4 rounded-2xl font-bold text-lg flex items-center gap-3 transition-all hover:scale-105 shadow-xl">
+                    <i class="fab fa-windows text-xl"></i>
+                    <span>Download for Windows (.exe)</span>
+                </button>
+                <p class="text-sm text-slate-500 font-medium italic">
+                    <i class="fas fa-check-circle text-green-500 mr-1"></i> No installation required (Portable)
+                </p>
+            </div>
+
+            <!-- Dashboard Preview Hero -->
+            <div data-aos="zoom-in-up" data-aos-delay="400" class="mt-16 relative">
+                <div class="rounded-3xl border-8 border-slate-900/5 dark:border-white/5 overflow-hidden shadow-2xl">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426" alt="CRM Dashboard" class="w-full h-auto">
+                </div>
+                <!-- Floating Card -->
+                <div class="absolute -bottom-6 -right-6 md:right-12 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 hidden md:block">
+                    <div class="flex items-center gap-4">
+                        <div class="h-12 w-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-600">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Revenue Growth</p>
+                            <p class="text-xl font-bold">+24.8% This Month</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Stats Section -->
+    <section class="py-12 bg-slate-100/50 dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center" data-aos="fade-up">
+                <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="15000">0</h3>
+                <p class="text-slate-500 font-medium">Active Users</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="99">0</h3>
+                <p class="text-slate-500 font-medium">Security Score</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="25">0</h3>
+                <p class="text-slate-500 font-medium">File Size (MB)</p>
+            </div>
+            <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                <h3 class="text-4xl font-bold gradient-text mb-2 counter" data-target="4.9">0</h3>
+                <p class="text-slate-500 font-medium">User Rating</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold mb-4">Powerful Features</h2>
+            <p class="text-slate-500 max-w-xl mx-auto">Everything you need to run your business from a single desktop dashboard.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Card 1 -->
+            <div data-aos="fade-up" class="glass p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600 mb-6">
+                    <i class="fas fa-users text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Client Management</h3>
+                <p class="text-slate-500 dark:text-slate-400">Store detailed contact info, communication history, and custom tags for every lead.</p>
+            </div>
+            <!-- Card 2 -->
+            <div data-aos="fade-up" data-aos-delay="100" class="glass p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                <div class="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 mb-6">
+                    <i class="fas fa-file-invoice-dollar text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Payment Tracking</h3>
+                <p class="text-slate-500 dark:text-slate-400">Monitor pending invoices and received payments with automated financial summaries.</p>
+            </div>
+            <!-- Card 3 -->
+            <div data-aos="fade-up" data-aos-delay="200" class="glass p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                <div class="w-14 h-14 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center text-purple-600 mb-6">
+                    <i class="fas fa-bell text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Follow-up Alerts</h3>
+                <p class="text-slate-500 dark:text-slate-400">Never miss a meeting. Set intelligent reminders that pop up directly on your desktop.</p>
+            </div>
+            <!-- Card 4 -->
+            <div data-aos="fade-up" class="glass p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                <div class="w-14 h-14 bg-orange-100 dark:bg-orange-900/30 rounded-2xl flex items-center justify-center text-orange-600 mb-6">
+                    <i class="fas fa-calendar-alt text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Calendar Integration</h3>
+                <p class="text-slate-500 dark:text-slate-400">Sync with your daily workflow using the built-in interactive calendar views.</p>
+            </div>
+            <!-- Card 5 -->
+            <div data-aos="fade-up" data-aos-delay="100" class="glass p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                <div class="w-14 h-14 bg-cyan-100 dark:bg-cyan-900/30 rounded-2xl flex items-center justify-center text-cyan-600 mb-6">
+                    <i class="fas fa-file-excel text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Excel Export</h3>
+                <p class="text-slate-500 dark:text-slate-400">Export your client lists and financial data to CSV/Excel with a single click.</p>
+            </div>
+            <!-- Card 6 -->
+            <div data-aos="fade-up" data-aos-delay="200" class="glass p-8 rounded-3xl transition-transform hover:-translate-y-2">
+                <div class="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center text-red-600 mb-6">
+                    <i class="fas fa-chart-pie text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Dashboard Analytics</h3>
+                <p class="text-slate-500 dark:text-slate-400">Visual charts and graphs provide instant insights into your business performance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshot Carousel -->
+    <section id="screenshots" class="py-24 bg-slate-100 dark:bg-slate-800/50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold mb-4">See It In Action</h2>
+                <p class="text-slate-500">A clean, intuitive interface designed for productivity.</p>
+            </div>
+            
+            <div class="swiper mySwiper rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070" class="w-full" alt="Screenshot 1"></div>
+                    <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=2070" class="w-full" alt="Screenshot 2"></div>
+                    <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=2070" class="w-full" alt="Screenshot 3"></div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next text-primary"></div>
+                <div class="swiper-button-prev text-primary"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-24 max-w-7xl mx-auto px-6">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div data-aos="fade-right">
+                <h2 class="text-4xl font-bold mb-8">Why Professional CRM?</h2>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-primary"><i class="fas fa-bolt text-xl"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">Fast & Lightweight</h4>
+                            <p class="text-slate-500">Built with optimized C++ core for instant loading and zero lag.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-primary"><i class="fas fa-wifi-slash text-xl"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">Offline Support</h4>
+                            <p class="text-slate-500">Work from anywhere. Your data is stored locally and stays accessible without internet.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="mt-1 text-primary"><i class="fas fa-shield-alt text-xl"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">Secure Local Database</h4>
+                            <p class="text-slate-500">AES-256 encryption ensures your customer data never leaves your computer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div data-aos="fade-left" class="bg-gradient-to-br from-primary to-secondary p-1 rounded-3xl">
+                <div class="bg-white dark:bg-slate-900 p-8 rounded-[1.4rem]">
+                    <h3 class="text-2xl font-bold mb-6">How It Works</h3>
+                    <div class="space-y-8 relative">
+                        <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-slate-200 dark:bg-slate-800"></div>
+                        <div class="flex gap-6 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold z-10 shadow-lg">1</div>
+                            <div>
+                                <h5 class="font-bold">Download</h5>
+                                <p class="text-slate-500">Get the 25MB executable file instantly.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold z-10 shadow-lg">2</div>
+                            <div>
+                                <h5 class="font-bold">Launch</h5>
+                                <p class="text-slate-500">Run the .exe file. No tedious installers or wizards.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 relative">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold z-10 shadow-lg">3</div>
+                            <div>
+                                <h5 class="font-bold">Manage</h5>
+                                <p class="text-slate-500">Login and start organizing your business assets.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="py-24">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="bg-slate-900 rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[100px]"></div>
+                <h2 class="text-4xl font-extrabold mb-6">Ready to scale your business?</h2>
+                <p class="text-slate-400 mb-10 text-lg max-w-xl mx-auto">Join 15,000+ business owners who simplified their workflow with Professional CRM v2.5.</p>
+                
+                <div class="flex flex-col items-center gap-6">
+                    <button onclick="handleDownload(this)" class="bg-white text-slate-900 px-10 py-5 rounded-2xl font-bold text-xl hover:scale-105 transition shadow-xl shadow-white/10">
+                        <i class="fas fa-download mr-2"></i> Download CRM v2.5
+                    </button>
+                    <div class="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+                        <span><i class="fas fa-file-code mr-2"></i>Version: 2.5.0</span>
+                        <span><i class="fas fa-hdd mr-2"></i>Size: 25.4 MB</span>
+                        <span><i class="fas fa-shield-check text-green-500 mr-2"></i>Scan safe / No virus</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-24 max-w-7xl mx-auto px-6">
+        <h2 class="text-4xl font-bold text-center mb-16">Trusted by Professionals</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="glass p-8 rounded-3xl" data-aos="fade-up">
+                <div class="flex text-yellow-400 mb-4 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="italic text-slate-600 dark:text-slate-400 mb-6">"The offline feature is a game-changer. I travel a lot and can finally manage my clients without worrying about Wi-Fi."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-slate-300 rounded-full overflow-hidden">
+                        <img src="https://i.pravatar.cc/150?u=1" alt="Avatar">
+                    </div>
+                    <div>
+                        <h5 class="font-bold">Sarah Jenkins</h5>
+                        <p class="text-xs text-slate-500">Real Estate Consultant</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex text-yellow-400 mb-4 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="italic text-slate-600 dark:text-slate-400 mb-6">"Fastest CRM I've ever used. It doesn't bloat my system like web-based tools. 10/10 recommendation!"</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-slate-300 rounded-full overflow-hidden">
+                        <img src="https://i.pravatar.cc/150?u=2" alt="Avatar">
+                    </div>
+                    <div>
+                        <h5 class="font-bold">David Chen</h5>
+                        <p class="text-xs text-slate-500">Freelance Designer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="glass p-8 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex text-yellow-400 mb-4 text-sm"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p class="italic text-slate-600 dark:text-slate-400 mb-6">"The Excel export saves me hours of work every weekend. The UI is clean and actually pleasant to use."</p>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-slate-300 rounded-full overflow-hidden">
+                        <img src="https://i.pravatar.cc/150?u=3" alt="Avatar">
+                    </div>
+                    <div>
+                        <h5 class="font-bold">Marcus Miller</h5>
+                        <p class="text-xs text-slate-500">Agency Owner</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-50 dark:bg-slate-900 pt-20 pb-10 border-t border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-2 mb-6">
+                        <div class="bg-primary p-2 rounded-lg">
+                            <i class="fas fa-rocket text-white"></i>
+                        </div>
+                        <span class="text-2xl font-bold tracking-tight">ProCRM <span class="text-primary text-sm font-medium">v2.5</span></span>
+                    </div>
+                    <p class="text-slate-500 max-w-sm mb-6">Professional grade CRM for Windows. Optimized for performance, security, and ease of use.</p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center hover:bg-primary hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6">Product</h5>
+                    <ul class="space-y-4 text-slate-500 text-sm">
+                        <li><a href="#features" class="hover:text-primary transition">Features</a></li>
+                        <li><a href="#screenshots" class="hover:text-primary transition">Screenshots</a></li>
+                        <li><a href="#download" class="hover:text-primary transition">Download v2.5</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Release Notes</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-6">Support</h5>
+                    <ul class="space-y-4 text-slate-500 text-sm">
+                        <li><a href="#" class="hover:text-primary transition">Documentation</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-primary transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-200 dark:border-slate-800 text-center text-sm text-slate-500 font-medium">
+                &copy; 2024 Professional CRM v2.5. All rights reserved. Made for Windows.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="fixed bottom-6 right-6 w-12 h-12 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center opacity-0 transition-opacity z-50">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({ duration: 800, once: true });
+
+        // Initialize Swiper
+        const swiper = new Swiper(".mySwiper", {
+            loop: true,
+            pagination: { el: ".swiper-pagination", clickable: true },
+            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+            autoplay: { delay: 4000 }
+        });
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            themeIcon.classList.replace(isDark ? 'fa-moon' : 'fa-sun', isDark ? 'fa-sun' : 'fa-moon');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const scrollBtn = document.getElementById('scrollToTop');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+                scrollBtn.classList.add('opacity-100');
+            } else {
+                navbar.classList.remove('py-2');
+                scrollBtn.classList.remove('opacity-100');
+            }
+        });
+
+        // Scroll to Top logic
+        document.getElementById('scrollToTop').addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Download Button Simulation
+function handleDownload(btn) {
+    const originalContent = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="loader"></span> Preparing Download...`;
+
+    setTimeout(() => {
+        showToast();
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+
+        // ✅ REAL DOWNLOAD TRIGGER
+        const link = document.createElement("a");
+        link.href = "download/crm.exe"; // path to your file
+        link.download = "Professional_CRM_v2.5.exe";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+    }, 1500);
+}
+
+        function showToast() {
+            const x = document.getElementById("toast");
+            x.className = "show";
+            setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        // Stats Counter Animation
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        const animateCounters = () => {
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 1);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        };
+
+        // Trigger counter when visible
+        const observer = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) animateCounters();
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.querySelector('.counter'));
+    </script>
+</body>
+</html>
